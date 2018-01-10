@@ -1,0 +1,257 @@
+{
+   "definition": {
+      "latestVersionId": 1,
+      "name": "com.box.analytics.monaco_services_request",
+      "validator": "com.box.schemarepository.core.validator.NoValidationSchemaValidator"
+   },
+   "environmentPaths": [
+      "analytics/dev",
+      "analytics/prod"
+   ],
+   "resources": [
+      {
+         "name": "auto_log_monaco_services_request",
+         "schemaName": "com.box.analytics.monaco_services_request",
+         "storeName": "hive"
+      },
+      {
+         "name": "auto_log_monaco_services_request",
+         "schemaName": "com.box.analytics.monaco_services_request",
+         "storeName": "elasticsearch"
+      }
+   ],
+   "stores": [
+      {
+         "name": "hive"
+      },
+      {
+         "name": "elasticsearch"
+      }
+   ],
+   "version": {
+      "doc": "Monaco Services Request",
+      "fields": [
+         {
+            "dataClassification": "internal",
+            "doc": "Epoch timestamp in seconds",
+            "filterable": true,
+            "name": "created",
+            "required": true,
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "configuration": {
+                     "format": "epoch_second"
+                  },
+                  "storeName": "elasticsearch",
+                  "type": "date"
+               }
+            ],
+            "type": "long"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Type of the event",
+            "filterable": true,
+            "name": "event_type",
+            "required": true,
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Unique identifier of the event",
+            "filterable": true,
+            "name": "event_guid",
+            "required": true,
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Namespace",
+            "filterable": true,
+            "name": "pod_namespace",
+            "required": true,
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Namespace",
+            "filterable": true,
+            "name": "pod_name",
+            "required": true,
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Trace Id",
+            "filterable": true,
+            "name": "trace_id",
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "restricted",
+            "doc": "User Id",
+            "filterable": true,
+            "name": "user_id",
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "long"
+               }
+            ],
+            "type": "long"
+         },
+         {
+            "dataClassification": "customer",
+            "doc": "Uri",
+            "filterable": true,
+            "name": "uri",
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Service Id",
+            "filterable": true,
+            "name": "service_id",
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         },
+         {
+            "dataClassification": "internal",
+            "doc": "Method",
+            "filterable": true,
+            "name": "method",
+            "storeOverrides": [
+               {
+                  "storeName": "hive",
+                  "type": "STRING"
+               },
+               {
+                  "storeName": "elasticsearch",
+                  "type": "keyword"
+               }
+            ],
+            "type": "string"
+         }
+      ],
+      "grammarVersion": 1,
+      "name": "monaco_services_request",
+      "namespace": "com.box.analytics",
+      "owner": "core-frameworks@box.com",
+      "partitioning": {
+         "configuration": {
+            "format": "yyyy-MM-dd",
+            "interval": "day",
+            "scalingFactor": 1000,
+            "segment": "hour",
+            "timeZone": "PST"
+         },
+         "inputFields": [
+            "created"
+         ],
+         "partitioner": "com.box.analytics.data.partitioning.TimeIntervalPartitioner"
+      },
+      "primaryKey": "event_guid",
+      "storeOverrides": [
+         [
+            {
+               "configuration": {
+                  "partitionField": "ds",
+                  "segmentField": "hour"
+               },
+               "retention": {
+                  "days": 180
+               },
+               "storeName": "hive"
+            }
+         ],
+         [
+            {
+               "configuration": { },
+               "retention": {
+                  "days": 30
+               },
+               "storeName": "elasticsearch"
+            }
+         ]
+      ],
+      "type": "record"
+   }
+}
+
